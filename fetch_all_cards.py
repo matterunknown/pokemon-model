@@ -57,6 +57,24 @@ SET_ERA = {
     'sv5':'sv','sv6':'sv','sv6pt5':'sv','sv7':'sv','sv8':'sv','sv8pt5':'sv',
     'sv9':'sv',
     'svp':'sv',  # SV promos
+    # Promos — assigned to parent era
+    'swshp':'swsh','smp':'sm','xyp':'xy','bwp':'bw',
+    'dpp':'dp','basep':'wizards','np':'nintendo',
+    # New sets (Mega Evolution 2025+)
+    'sv10':'sv','rsv10pt5':'sv','zsv10pt5':'sv',
+    'me1':'sv','me2':'sv',
+    # SWSH extras
+    'swsh45sv':'swsh','swsh9tg':'swsh','swsh10tg':'swsh',
+    'swsh11tg':'swsh','swsh12tg':'swsh','swsh12pt5gg':'swsh',
+    # SM extras
+    'sma':'sm','col1':'bw','dc1':'xy',
+    # POP Series
+    'pop1':'nintendo','pop2':'nintendo','pop3':'nintendo',
+    'pop4':'dp','pop5':'dp','pop6':'dp','pop7':'dp','pop8':'dp','pop9':'dp',
+    # McDonald's collections
+    'mcd11':'bw','mcd12':'bw','mcd13':'xy','mcd14':'xy',
+    'mcd15':'xy','mcd16':'xy','mcd19':'sm','mcd21':'swsh','mcd22':'swsh',
+    'ru1':'nintendo',
 }
 
 ERA_MOMENTUM = {
@@ -440,3 +458,16 @@ def run():
 
 if __name__ == '__main__':
     run()
+
+def post_build():
+    """Auto-chain: runs after DB build completes."""
+    import subprocess as sp
+    print("\nAuto-chaining model run...")
+    r = sp.run(['python3', '/opt/orchid/apps/pokemon-model/model_v3.py'], capture_output=True, text=True)
+    if r.returncode == 0:
+        print(r.stdout[-400:])
+        print("Rebuilding page...")
+        r2 = sp.run(['python3', '/opt/orchid/apps/pokemon-model/rebuild_page.py'], capture_output=True, text=True)
+        print(r2.stdout[-200:] or r2.stderr[-100:])
+    else:
+        print(f"Model failed: {r.stderr[-200:]}")
