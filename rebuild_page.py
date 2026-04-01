@@ -11,7 +11,7 @@ print(f"[{datetime.now().isoformat()}] Rebuilding pokemon model page...")
 
 # Run the model
 result = subprocess.run(
-    ['python3', '/opt/orchid/apps/pokemon-model/model_v2.py'],
+    ['python3', '/opt/orchid/apps/pokemon-model/model_v3.py'],
     capture_output=True, text=True
 )
 if result.returncode != 0:
